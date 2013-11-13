@@ -1,11 +1,6 @@
 package nlp.assignments.parsing;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import nlp.ling.Tree;
 import nlp.util.CounterMap;
@@ -248,24 +243,80 @@ class BaselineCkyParser implements Parser {
       return annotatedTrees;
     }
 
+    /**
+     * Recursive function that populates a given collection with the Unary rules from a given tree.
+     * @param tree The tree to be processed.
+     * @param ret A collection to be populated.
+     */
+    private void extractUnaryRules(Tree<String> tree, Collection<UnaryRule> ret) {
+        if (tree.getChildren().size() == 0) { return; }
+        else if (tree.getChildren().size() == 1) {
+            if (tree.getChildren().get(0).isLeaf()) {
+                String parent = tree.getLabel();
+                String child = tree.getChildren().get(0).getLabel();
 
+                ret.add(new UnaryRule(parent, child));
+            }
+            extractUnaryRules(tree.getChildren().get(0), ret);
+        }
+        else if  (tree.getChildren().size() == 2) {
+            extractUnaryRules(tree.getChildren().get(0), ret);
+            extractUnaryRules(tree.getChildren().get(1), ret);
+        }
+    }
+
+    /**
+     * Recursive function that populates a given collection with the binary rules from a given tree.
+     * @param tree The tree to be processed.
+     * @param ret A collection to be populated.
+     */
+    private void extractBinaryRules(Tree<String> tree, Collection<BinaryRule> ret) {
+        if (tree.getChildren().size() == 0) { return; }
+        else if (tree.getChildren().size() == 1) {
+            extractBinaryRules(tree.getChildren().get(0), ret);
+        }
+        else if  (tree.getChildren().size() == 2) {
+            String parent = tree.getLabel();
+            String left = tree.getChildren().get(0).getLabel();
+            String right = tree.getChildren().get(1).getLabel();
+            ret.add(new BinaryRule(parent, left, right));
+
+            extractBinaryRules(tree.getChildren().get(0), ret);
+            extractBinaryRules(tree.getChildren().get(1), ret);
+        }
+    }
     
     @Override
-    public double getLogScore(Tree<String> tree) {
+    public double getLogScore(Tree <String> tree) {
         double score = 0.0;
         Tree<String> annotatedTree = annotator.annotateTree(tree);
         /*
          * Add method which uses the annotatedTree (not the 'tree') and compute the log probability of the tree
          */
-        System.out.println(annotatedTree);
-        System.out.println(this.grammar.getBinaryRules());
-        System.out.println(this.grammar.getBinaryRules().size());
-//        List<Tree<String>> children = annotatedTree.getChildren();
-//        List<Tree<String>> subtrees = annotatedTree.toSubTreeList();
-//
-//        for (Tree<String> subtree : subtrees) {
-//            System.out.println(subtree);
-//        }
+        Collection<UnaryRule> unaryRules = new ArrayList<UnaryRule>();
+        Collection<BinaryRule> binaryRules = new ArrayList<BinaryRule>();
+        extractUnaryRules(annotatedTree, unaryRules);
+        extractBinaryRules(annotatedTree, binaryRules);
+
+        for (UnaryRule ur : unaryRules) {
+            int index = this.grammar.getUnaryRules().indexOf(ur);
+            double ruleLogP = Math.log(0);
+            if (index != -1) {
+                ruleLogP = Math.log(this.grammar.getUnaryRules().get(index).getScore());
+            }
+            System.out.println(ruleLogP);
+            score += ruleLogP;
+        }
+        for (BinaryRule br : binaryRules) {
+            int index = this.grammar.getBinaryRules().indexOf(br);
+            double ruleLogP = Math.log(0);
+            if (index != -1) {
+                ruleLogP = Math.log(this.grammar.getBinaryRules().get(index).getScore());
+            }
+            System.out.println(ruleLogP);
+            score += ruleLogP;
+        }
+
         return score;
     }
 

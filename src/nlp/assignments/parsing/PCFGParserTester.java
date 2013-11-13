@@ -15,7 +15,7 @@ import nlp.util.*;
 public class PCFGParserTester {
 
   public static void main(String[] args) {
-    args = new String[]{"-path","/home/jaivalis/workspace/idea/ELP/toy-data", "-scoring-mode"};
+    args = new String[]{"-path","./toy-data", "-scoring-mode"};
     // Parse command line flags and arguments
     Map<String, String> argMap = CommandLineUtils.simpleCommandLineParser(args);
 
