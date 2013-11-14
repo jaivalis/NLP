@@ -318,13 +318,22 @@ class BaselineCkyParser implements Parser {
         /*
          * Add method which uses the annotatedTree (not the 'tree') and compute the log probability of the tree
          */
+        Collection<UnaryRule> preterminalRules = new ArrayList<UnaryRule>();
         Collection<UnaryRule> unaryRules = new ArrayList<UnaryRule>();
         Collection<BinaryRule> binaryRules = new ArrayList<BinaryRule>();
-        extractUnaryRules(annotatedTree, unaryRules);
+        extractPreterminalRules(annotatedTree, preterminalRules);
         extractBinaryRules(annotatedTree, binaryRules);
+        extractUnaryRules(annotatedTree, unaryRules);
 
+        for (UnaryRule pr : preterminalRules) {
+            double sc = this.lexicon.scoreTagging(pr.child, pr.parent);
+            System.out.println(pr);
+            score += Math.log(sc);
+        }
         for (UnaryRule ur : unaryRules) {
             double sc = this.lexicon.scoreTagging(ur.child, ur.parent);
+            //System.out.println(ur);
+            //System.out.println(sc);
             score += Math.log(sc);
         }
         for (BinaryRule br : binaryRules) {
