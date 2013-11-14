@@ -276,17 +276,17 @@ class BaselineCkyParser implements Parser {
     private void extractPreterminalRules(Tree<String> tree, Collection<UnaryRule> ret) {
         if (tree.getChildren().size() == 0) { return; } // termination condition
         else if (tree.getChildren().size() == 1) {      // 1 child > add to ret
-            if (tree.getChildren().get(0).isLeaf()) {
+            if (tree.isPreTerminal()) {
                 String parent = tree.getLabel();
                 String child = tree.getChildren().get(0).getLabel();
 
                 ret.add(new UnaryRule(parent, child));
             }
-            extractUnaryRules(tree.getChildren().get(0), ret);
+            extractPreterminalRules(tree.getChildren().get(0), ret);
         }
         else if  (tree.getChildren().size() == 2) {
-            extractUnaryRules(tree.getChildren().get(0), ret);
-            extractUnaryRules(tree.getChildren().get(1), ret);
+            extractPreterminalRules(tree.getChildren().get(0), ret);
+            extractPreterminalRules(tree.getChildren().get(1), ret);
         }
     }
 
@@ -319,11 +319,14 @@ class BaselineCkyParser implements Parser {
          * Add method which uses the annotatedTree (not the 'tree') and compute the log probability of the tree
          */
         Collection<UnaryRule> preterminalRules = new ArrayList<UnaryRule>();
-        Collection<UnaryRule> unaryRules = new ArrayList<UnaryRule>();
-        Collection<BinaryRule> binaryRules = new ArrayList<BinaryRule>();
         extractPreterminalRules(annotatedTree, preterminalRules);
-        extractBinaryRules(annotatedTree, binaryRules);
+
+        Collection<UnaryRule> unaryRules = new ArrayList<UnaryRule>();
         extractUnaryRules(annotatedTree, unaryRules);
+
+        Collection<BinaryRule> binaryRules = new ArrayList<BinaryRule>();
+        extractBinaryRules(annotatedTree, binaryRules);
+
 
         for (UnaryRule pr : preterminalRules) {
             double sc = this.lexicon.scoreTagging(pr.child, pr.parent);
