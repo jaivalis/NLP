@@ -1,1 +1,32 @@
-yada yada yada
+
+This file explains what was done in the first stage of the assignment for the NLP assigment.
+
+                Tobias Stahl                            10528199
+                Ioannis Giounous Aivalis                10524851
+
+The task was to implement a function to calculate the log probability of a given tree. The changes made to the baseline
+code in order to implement this functionality are all situated in the 'BaselineCkyParser.java' file and involve the
+implementation of the following functions:
+
+    (1) void extractUnaryRules(Tree<String> tree, Collection<UnaryRule> ret)
+
+    (2) void extractBinaryRules(Tree<String> tree, Collection<BinaryRule> ret)
+
+    (3) double getLogScore(Tree<String> tree)
+
+(1) This is a recursive function that given a tree will extract all pre-terminal rules and add them to the collection
+    ret, given as a parameter.
+
+(2) This is a recursive function that given a tree will extract all binary rules and add them to the collection ret,
+    given as a parameter.
+
+(3) In order to calculate the log-score this function will first obtain all the pre-terminal & binary rules from the
+    given tree. After that the score will be calculated as follows:
+
+        for each pre-terminal rule:
+            rule_score <- get tag score from lexicon (scoreTagging)
+            score <- score + log(rule_score)
+        for each unary rule:
+            rule_score <- get rule score from grammar
+            score <- score + log(rule_score)
+        return score

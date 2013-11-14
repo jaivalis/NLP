@@ -290,7 +290,7 @@ class BaselineCkyParser implements Parser {
     }
     
     @Override
-    public double getLogScore(Tree <String> tree) {
+    public double getLogScore(Tree<String> tree) {
         double score = 0.0;
         Tree<String> annotatedTree = annotator.annotateTree(tree);
         /*
