@@ -14,16 +14,15 @@ implementation of the following functions:
 
     (3) void extractPreterminalRules(Tree<String>, Collection<UnaryRule>)
 
-    (4) double getLogScore(Tree<String> tree)
+    (4) double getLogScore(Tree<String>)
 
-(1) This is a recursive function that given a tree will extract all pre-terminal rules and add them to the collection
-    ret, given as a parameter.
+(1) This is a recursive function that given a tree will extract all pre-terminal rules and add them to a parameter
+    collection.
 
-(2) This is a recursive function that given a tree will extract all binary rules and add them to the collection ret,
-    given as a parameter.
+(2) This is a recursive function that given a tree will extract all binary rules and add them to a parameter collection.
 
-(3) This is a recursive function that given a tree will extract all binary rules and add them to the collection ret,
-    given as a parameter.
+(3) This is a recursive function that given a tree will extract all preterminal binary rules and add them to a parameter
+    collection.
 
 (4) In order to calculate the log-score this function will first obtain all the pre-terminal & binary rules from the
     given tree. After that the score will be calculated as follows:
@@ -32,6 +31,9 @@ implementation of the following functions:
             rule_score <- get tag score from lexicon (scoreTagging)
             score <- score + log(rule_score)
         for each unary rule:
+            rule_score <- get rule score from grammar
+            score <- score + log(rule_score)
+        for each binary rule:
             rule_score <- get rule score from grammar
             score <- score + log(rule_score)
         return score
