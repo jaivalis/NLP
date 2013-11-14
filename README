@@ -8,11 +8,13 @@ The task was to implement a function to calculate the log probability of a given
 code in order to implement this functionality are all situated in the 'BaselineCkyParser.java' file and involve the
 implementation of the following functions:
 
-    (1) void extractUnaryRules(Tree<String> tree, Collection<UnaryRule> ret)
+    (1) void extractUnaryRules(Tree<String>, Collection<UnaryRule>)
 
-    (2) void extractBinaryRules(Tree<String> tree, Collection<BinaryRule> ret)
+    (2) void extractBinaryRules(Tree<String>, Collection<BinaryRule>)
 
-    (3) double getLogScore(Tree<String> tree)
+    (3) void extractPreterminalRules(Tree<String>, Collection<UnaryRule>)
+
+    (4) double getLogScore(Tree<String> tree)
 
 (1) This is a recursive function that given a tree will extract all pre-terminal rules and add them to the collection
     ret, given as a parameter.
@@ -20,7 +22,10 @@ implementation of the following functions:
 (2) This is a recursive function that given a tree will extract all binary rules and add them to the collection ret,
     given as a parameter.
 
-(3) In order to calculate the log-score this function will first obtain all the pre-terminal & binary rules from the
+(3) This is a recursive function that given a tree will extract all binary rules and add them to the collection ret,
+    given as a parameter.
+
+(4) In order to calculate the log-score this function will first obtain all the pre-terminal & binary rules from the
     given tree. After that the score will be calculated as follows:
 
         for each pre-terminal rule:

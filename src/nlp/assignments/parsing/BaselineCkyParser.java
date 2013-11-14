@@ -254,11 +254,12 @@ class BaselineCkyParser implements Parser {
     private void extractUnaryRules(Tree<String> tree, Collection<UnaryRule> ret) {
         if (tree.getChildren().size() == 0) { return; } // termination condition
         else if (tree.getChildren().size() == 1) {      // 1 child > add to ret
-            String parent = tree.getLabel();
-            String child = tree.getChildren().get(0).getLabel();
+            if (!tree.getChildren().get(0).isLeaf()){
+                String parent = tree.getLabel();
+                String child = tree.getChildren().get(0).getLabel();
 
-            ret.add(new UnaryRule(parent, child));
-
+                ret.add(new UnaryRule(parent, child));
+            }
             extractUnaryRules(tree.getChildren().get(0), ret);
         }
         else if  (tree.getChildren().size() == 2) {
