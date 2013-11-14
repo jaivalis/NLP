@@ -67,6 +67,7 @@ public class PennTreebankReader {
       File root = new File(path);
       List<File> files = new ArrayList<File>();
       addFilesUnder(root, files, fileFilter);
+      Collections.sort(files);
       return files;
     }
 

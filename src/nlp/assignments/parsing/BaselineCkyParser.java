@@ -330,14 +330,15 @@ class BaselineCkyParser implements Parser {
 
         for (UnaryRule pr : preterminalRules) {
             double sc = this.lexicon.scoreTagging(pr.child, pr.parent);
-            System.out.println(pr);
             score += Math.log(sc);
         }
         for (UnaryRule ur : unaryRules) {
-            double sc = this.lexicon.scoreTagging(ur.child, ur.parent);
-            //System.out.println(ur);
-            //System.out.println(sc);
-            score += Math.log(sc);
+            int index = this.grammar.getUnaryRules().indexOf(ur);
+            double ruleLogP = Math.log(0);
+            if (index != -1) {
+                ruleLogP = Math.log(this.grammar.getUnaryRules().get(index).getScore());
+            }
+            score += ruleLogP;
         }
         for (BinaryRule br : binaryRules) {
             int index = this.grammar.getBinaryRules().indexOf(br);
