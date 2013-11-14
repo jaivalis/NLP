@@ -227,7 +227,10 @@ class BaselineCkyParser implements Parser {
 
       System.out.print("Building grammar ... ");
       grammar = new Grammar(annotatedTrainTrees);
+      System.out.print("Building grammar ... ");
       lexicon = new Lexicon(annotatedTrainTrees);
+      
+      //this.lexicon.scoreTagging(word, tag)
       System.out.println("done. (" + grammar.getStates().size() + " states)");
       
       // use the unary closure to support unary rules in the CKY algorithm
@@ -299,13 +302,9 @@ class BaselineCkyParser implements Parser {
         extractBinaryRules(annotatedTree, binaryRules);
 
         for (UnaryRule ur : unaryRules) {
-            int index = this.grammar.getUnaryRules().indexOf(ur);
-            double ruleLogP = Math.log(0);
-            if (index != -1) {
-                ruleLogP = Math.log(this.grammar.getUnaryRules().get(index).getScore());
-            }
-            System.out.println(ruleLogP);
-            score += ruleLogP;
+            double sc = this.lexicon.scoreTagging(ur.child, ur.parent);
+            score += Math.log(sc);
+            
         }
         for (BinaryRule br : binaryRules) {
             int index = this.grammar.getBinaryRules().indexOf(br);
@@ -313,7 +312,6 @@ class BaselineCkyParser implements Parser {
             if (index != -1) {
                 ruleLogP = Math.log(this.grammar.getBinaryRules().get(index).getScore());
             }
-            System.out.println(ruleLogP);
             score += ruleLogP;
         }
 
