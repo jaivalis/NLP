@@ -26,10 +26,19 @@
 
 
 \section{Introduction}
+This report is about Assignment 1 of the UvA course Elements of Natural Language Processing. The goal of Assignment 1 is to compute the probability of a given tree.\\
+The steps taken in order to do that are explained in Implementation.
 
+\section{Implementation}
+In order to achieve the goal of the assignment, the function \texttt {getLogScore(Tree<String> tree)} has to be implemented. The tree is traversed recursively and both binary rules and unary rules are extracted.\\
+The passing through the tree to get the rules is done by the functions \texttt{extractUnaryRules}, \texttt{extractPreterminalRules} and \texttt{extractBinaryRules}.\\
+The score of non-preterminal rules is extracted by its score in the grammar obtained by the training trees. Preterminal unary rules are scored by the training trees lexicons \texttt{scoreTagging(String word, String tag)} function.
+Finally the logarithm of each rule's score is summed up.\\
+There are some \emph{-Infinity} showing up in the scoring of the test trees, which occur, since some rules do not appear in the training data and the logarithm of their score (0) is \emph{-Infinity}.\\
 
-\section{Algorithms}
-- add function ex
+\section{Conclusion}
+In this assignment the familiarizing with the given code, the implementation of recursive functions to extract the rules of a tree and the evaluation of the scoring of a tree have been completed.
+
 
 
 
