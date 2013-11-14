@@ -252,8 +252,29 @@ class BaselineCkyParser implements Parser {
      * @param ret A collection to be populated.
      */
     private void extractUnaryRules(Tree<String> tree, Collection<UnaryRule> ret) {
-        if (tree.getChildren().size() == 0) { return; }
-        else if (tree.getChildren().size() == 1) {
+        if (tree.getChildren().size() == 0) { return; } // termination condition
+        else if (tree.getChildren().size() == 1) {      // 1 child > add to ret
+            String parent = tree.getLabel();
+            String child = tree.getChildren().get(0).getLabel();
+
+            ret.add(new UnaryRule(parent, child));
+
+            extractUnaryRules(tree.getChildren().get(0), ret);
+        }
+        else if  (tree.getChildren().size() == 2) {
+            extractUnaryRules(tree.getChildren().get(0), ret);
+            extractUnaryRules(tree.getChildren().get(1), ret);
+        }
+    }
+
+    /**
+     * Recursive function that populates a given collection with the pre-terminal Unary rules from a given tree.
+     * @param tree The tree to be processed.
+     * @param ret A collection to be populated.
+     */
+    private void extractPreterminalRules(Tree<String> tree, Collection<UnaryRule> ret) {
+        if (tree.getChildren().size() == 0) { return; } // termination condition
+        else if (tree.getChildren().size() == 1) {      // 1 child > add to ret
             if (tree.getChildren().get(0).isLeaf()) {
                 String parent = tree.getLabel();
                 String child = tree.getChildren().get(0).getLabel();
@@ -304,7 +325,6 @@ class BaselineCkyParser implements Parser {
         for (UnaryRule ur : unaryRules) {
             double sc = this.lexicon.scoreTagging(ur.child, ur.parent);
             score += Math.log(sc);
-            
         }
         for (BinaryRule br : binaryRules) {
             int index = this.grammar.getBinaryRules().indexOf(br);
@@ -314,7 +334,6 @@ class BaselineCkyParser implements Parser {
             }
             score += ruleLogP;
         }
-
         return score;
     }
 
