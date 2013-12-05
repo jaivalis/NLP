@@ -198,9 +198,10 @@ class BaselineCkyParser implements Parser {
         Chart chart = new Chart(sentence.size());
 
         // preterminal rules
-        for (int k = 0; k < sentence.size(); k++) {
+        for (int i = 0; i < sentence.size(); i++) {
             for (String preterm : lexicon.getAllTags()) {
-                chart.set(k, k + 1, preterm, lexicon.scoreTagging(sentence.get(k), preterm));
+                double score = lexicon.scoreTagging(sentence.get(i), preterm);
+                chart.set(i, i + 1, preterm, score);
             }
         }
 
@@ -215,7 +216,6 @@ class BaselineCkyParser implements Parser {
                     double score = chart.get(k, k + 1, rule.getChild());
                     double currScore = score * rule.getScore();
 
-
                     // only record the best way
                     if (currScore > bestScore) {
                         bestScore = currScore;
@@ -223,9 +223,7 @@ class BaselineCkyParser implements Parser {
                     }
                 }
                 double bestpre = chart.get(k, k + 1, parent);
-                // if unary rule is not  Double.NEGATIVE_INFINITY and its beter than the preterminal rule
                 if (bestScore != Double.NEGATIVE_INFINITY && bestScore > bestpre) {
-
                     chart.set(k, k + 1, parent, bestScore);
                     chart.setBackPointer(k, k + 1, parent, optRule);
                 }

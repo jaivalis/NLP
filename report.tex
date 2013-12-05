@@ -15,7 +15,7 @@
 	\textbf{NLP Assignment 1}
 }
 
-\author{Tobias Stahl \\ 10528199 \and Ioannis Giounous Aivalis \\ 10524851 }
+\author{Tobias Stahl \\ 10528199 \and Ioannis-Giounous Aivalis \\ 10524851 }
 
 
 
@@ -26,20 +26,49 @@
 
 
 \section{Introduction}
-This report is about Assignment 1 of the UvA course Elements of Natural Language Processing. The goal of Assignment 1 is to compute the probability of a given tree.\\
-The steps taken in order to do that are explained in Implementation.
+This report is about the assignment for the UvA course Elements of Natural Language Processing. This report is split between two parts. The goal of the first part is to compute the log-probability of a given parse tree. In the second part we extend the given implementation of a CKY-Parser to enable it to parse unary rules.\\
 
-\section{Implementation}
-In order to achieve the goal of the assignment, the function \texttt {getLogScore(Tree<String> tree)} has to be implemented. The tree is traversed recursively and both binary rules and unary rules are extracted.\\
-The passing through the tree to get the rules is done by the functions \texttt{extractUnaryRules}, \texttt{extractPreterminalRules} and \texttt{extractBinaryRules}.\\
-The score of non-preterminal rules is extracted by its score in the grammar obtained by the training trees. Preterminal unary rules are scored by the training trees lexicons \texttt{scoreTagging(String word, String tag)} function.
+\section{Part 1}
+The objective of this part is to [...]
+
+\subsection{Implementation}
+In order to achieve the goal of this part of the assignment, the function \texttt {getLogScore(Tree<String> tree)} has to be implemented. The tree is traversed recursively and both binary rules and unary rules are extracted.\\
+The passing through the tree to get the rules is done by the methods \texttt{extractUnaryRules}, \texttt{extractPreterminalRules} and \texttt{extractBinaryRules}.\\
+The score of non-preterminal rules is extracted by its score in the grammar obtained by the training trees. Preterminal unary rules are scored by the training trees lexicons \texttt{scoreTagging(String word, String tag)} method.
 Finally the logarithm of each rule's score is summed up.\\
 There are some \emph{-Infinity} showing up in the scoring of the test trees, which occur, since some rules do not appear in the training data and the logarithm of their score (0) is \emph{-Infinity}.\\
 
+\section{Part 2}
+In this part we have to extend the given code-base to add support for parsing of unary rules, along with the binary rules which is already implemented.
+
+\subsection{Implementation}
+This task can be split in a series of steps. The task is to add support for unary rules in the CKY Parser which does support binary rules. Starting with the most simple of steps the first would be to include unary rules in the \texttt{Chart} class.\\
+The \texttt{Chart} class is a container class of \texttt{EdgeInfo} instances. So we added a \texttt{BinaryRule} instance variable to that class\footnote{An alternate way to do this would be to make a \texttt{Rule} superclass to the \texttt{BinaryRule} and \texttt{UnaryRule} classes. This would be a more generic way to solve this problem as all the methods of the Chart involving rules could be subject to the \texttt{Rule} class instead of the separate subclasses.}. The intuition behind this is that either of the Rules of the class has to be \texttt{null} and in that sense that instance would represent either a unary or a binary rule at runtime.\\ % function --> method
+Next we had to take the changes we made in \texttt{EdgeInfo} into consideration in the \texttt{Chart} class. For this we had to split two methods, namely: \texttt{setBackPointer(...)} and \texttt{getRule(...)}. We overloaded the first since it returned void so we added an implementation for taking \texttt{UnaryRule} as a parameter (In the \texttt{UnaryRule} case we did not have to take the midpoint into consideration either. For the latter (since it returns a rule object, we had to make two implementations (since we decided not to make a \texttt{Rule} superclass). So we created the methods: \texttt{getBinaryRule(...)} and \texttt{getUnaryRule(...)} with the same exact parameters as before.\\
+Finally we could start altering the methods of the \texttt{BaselineCkyParser} class. First we had to instantiate a \texttt{UnaryClosure} instance variable that would be of help for the unary rules. In order for the parsing to take place we had to change the methods \texttt{traverseBackPointersHelper} and \texttt{getBestParse}.
+For the first (recursive) method we had to add support for unary chains. So in that sense (before any of the rest of the functions is reached) we check if the given position of the chart contains a unary rule. In that case we traverse the closed chain (using the unary closure instance variable) and set the children as they occur.\\
+For \texttt{getBestParse} we need to also check for unary rules after we have tried all the binary rules (as done in the explanation of the CKY Parser). To do this we will traverse all the unary rules that exist in the unary closure instance variable by looking for those who have the given label as parent, and then determine which one yields the best score (in the same fashion with the binary rules).\\
+
+\subsection{Experiment}
+
+
+\subsection{Results}
+In this section we will discuss the results obtained by our implementation of the CKY-Parser for an experiment setup. The metrics used for the evaluation of the outcome system are: Precision, Recall, F1 and exact matches (the number of trees that exaclty match the correct expected tree).\\
+After a TODOnumberOfRunsHere the results that the system scored are presented in Table \ref{results}.
+
+\begin{center}\begin{table}
+	\begin{tabular}{|c||c|c|c|c|}
+	\hline
+		 	  & Precision (\%) & Recall (\%) & F1 (\%) & Ex (\%)\\
+	\hline
+		Score & 68.49          & 63.03       & 65.65    & 11.42\\
+	\hline
+	\end{tabular}
+	\caption{Average system performance}
+	\end{table}
+\label{results}\end{center}
+
 \section{Conclusion}
-In this assignment the familiarizing with the given code, the implementation of recursive functions to extract the rules of a tree and the evaluation of the scoring of a tree have been completed.
-
-
-
+In this assignment we got the chance to familiarize ourselfes with a very advanced implementation of a Parser. In that direction we were able to implement some methods in order to complete a given code-base to add missing some missing functionality. %the familiarizing with the given code, the implementation of recursive functions to extract the rules of a tree and the evaluation of the scoring of a tree have been completed.
 
 \end{document}
