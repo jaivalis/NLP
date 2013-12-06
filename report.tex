@@ -29,7 +29,7 @@
 This report is about the assignment for the UvA course Elements of Natural Language Processing. This report is split between two parts. The goal of the first part is to compute the log-probability of a given parse tree. In the second part we extend the given implementation of a CKY-Parser to enable it to parse unary rules.\\
 
 \section{Part 1}
-The objective of this part is to [...]
+The objective of this part is to compute the probability of a tree according to the probabilistic grammar. In order to do this, the tree is traversed and the logarithms of the rule probabilities are summed. 
 
 \subsection{Implementation}
 In order to achieve the goal of this part of the assignment, the function \texttt {getLogScore(Tree<String> tree)} has to be implemented. The tree is traversed recursively and both binary rules and unary rules are extracted.\\
@@ -61,7 +61,7 @@ After a TODOnumberOfRunsHere the results that the system scored are presented in
 	\hline
 		 	  & Precision (\%) & Recall (\%) & F1 (\%) & Ex (\%)\\
 	\hline
-		Score & 68.49          & 63.03       & 65.65    & 11.42\\
+		Score & 70.41 		&	 64.57 		& 67.36 & 	16.82\\
 	\hline
 	\end{tabular}
 	\caption{Average system performance}

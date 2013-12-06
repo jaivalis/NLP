@@ -76,9 +76,9 @@ public class PCFGParserTester {
             //This is only a subset of the validation set - 393 trees (as used, e.g., in Klein and Manning 2003 for initial experiments)
             //testTrees = readTrees(basePath, 2200, 2219, maxTestLength); //
 
-            testTrees = readTrees(basePath, 2200, 2201, maxTestLength);
+//          testTrees = readTrees(basePath, 2200, 2299, maxTestLength);
             System.out.print("Loading test trees  ... ");
-//      testTrees = readTrees(basePath, 2300, 2399, maxTestLength);
+            testTrees = readTrees(basePath, 2300, 2399, maxTestLength);
         }
         System.out.println("done. (" + testTrees.size() + " trees)");
 
